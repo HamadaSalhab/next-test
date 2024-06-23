@@ -1,95 +1,65 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import Navbar from '@/compenents/Navbar'
+import { Container, Flex, Box, AspectRatio } from '@chakra-ui/react'
+import ChatRoom from '@/compenents/ChatRoom'
+import { useEffect, useRef, useState } from 'react'
+import NameInput from '@/compenents/NameInput'
+import 'regenerator-runtime/runtime'
 
-export default function Home() {
+export default function Home () {
+  const [logged, setLogged] = useState<boolean>(false)
+  const [isSpeaking, setIsSpeaking] = useState(false)
+
+  useEffect(() => {
+    setLogged(localStorage.getItem('logged') !== null)
+  }, [])
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <>
+      <Navbar />
+      <Container
+        maxW='container.2xl'
+        justifyContent={'center'}
+        alignContent={'center'}
+        height={'90vh'}
+      >
+        {logged ? (
+          <Flex
+            direction={{ base: 'column', md: 'row' }}
+            justifyContent={'center'}
+            alignContent={'center'}
+            alignItems={'center'}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+            <Box flex={2}>
+              {isSpeaking && (
+                // <AspectRatio ratio={16 / 11.5}>
+                <video className='VideoTag' autoPlay loop muted>
+                  <source src='/with-1.mp4' type='video/mp4' />
+                </video>
+                // </AspectRatio>
+              )}
+              {!isSpeaking && (
+                // <AspectRatio ratio={16 / 11.5}>
+                <video
+                  className='VideoTag'
+                  style={{ width: '100%' }}
+                  autoPlay
+                  loop
+                  muted
+                >
+                  <source src='/without.mp4' type='video/mp4' />
+                </video>
+                // </AspectRatio>
+              )}
+            </Box>
+            <Box flex={1}>
+              <ChatRoom setIsSpeaking={setIsSpeaking} />
+            </Box>
+          </Flex>
+        ) : (
+          <NameInput setLogged={setLogged} />
+        )}
+      </Container>
+    </>
+  )
 }
